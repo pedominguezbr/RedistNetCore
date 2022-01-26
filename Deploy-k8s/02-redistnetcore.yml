@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:  
+  name: redistnetcoremaps
+  namespace: bancaempresas
+data:
+  appsettings.json: |
+    {
+      "ApiKey": "1234",
+      "Enabled": true,
+      "Timeout": 5000,
+      "ConnectionStrings": {
+        "CacheConnection": "redis-host.redis.cache.windows.net:6380,password=passwordredis,ssl=True,abortConnect=False"
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redistnetcore
+  namespace: bancaempresas
+  labels:
+    app: redistnetcore
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redistnetcore
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: redistnetcore
+        version: v1
+    spec:
+      volumes:
+        - configMap:
+            defaultMode: 256
+            name: redistnetcoremaps
+            optional: false
+          name: redistnetcoremaps
+      containers:
+        - name: redistnetcore
+          image: docker.io/pedominguezbr/redistnetcore:1.0   
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {}
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: false
+          tty: true
+          volumeMounts:
+          - mountPath: /app/appsettings.json
+            name: redistnetcoremaps
+            subPath: appsettings.json
+      restartPolicy: Always
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 1

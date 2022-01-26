@@ -12,3 +12,8 @@ docker run --name redistnetcore_test --rm -t redistnetcore
 # run image settting appsettings.json
 docker run --name redistnetcore_test --mount type=bind,source="$(pwd)"/appsettings.json,target=/app/appsettings.json --rm -t redistnetcore
 ```
+
+## Deploy in Kube 
+```
+kubectl apply -f ./Deploy-k8s
+```
