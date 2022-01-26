@@ -32,10 +32,11 @@ namespace Redistest
                 .AddJsonFile("appsettings.json");
                 //.AddUserSecrets<Program>();
             var configuration = builder.Build();
-            //var conString = configuration["CacheConnection"].ToString();
+            var Timeout = int.Parse( configuration["Timeout"].ToString());
             var conString = configuration.GetConnectionString("CacheConnection");
 
             Console.WriteLine(conString);
+            Console.WriteLine("Timeout Delay {0}",Timeout);
             _redisConnection = await RedisConnection.InitializeAsync(conString);
             string MachineName2 = System.Net.Dns.GetHostName();
 
@@ -46,8 +47,8 @@ namespace Redistest
 
                 while (!Console.KeyAvailable)
                 {
-                    Task thread1 = Task.Run(() => RunRedisCommandsAsync(MachineName2 + " " + System.DateTime.Now.ToString() + " Thread 1"));
-                    Task thread2 = Task.Run(() => RunRedisCommandsAsync(MachineName2 + " " + System.DateTime.Now.ToString() + " Thread 2"));
+                    Task thread1 = Task.Run(() => RunRedisCommandsAsync(MachineName2 + " " + System.DateTime.Now.ToString() + " Thread 1", Timeout));
+                    Task thread2 = Task.Run(() => RunRedisCommandsAsync(MachineName2 + " " + System.DateTime.Now.ToString() + " Thread 2", Timeout));
 
                     Task.WaitAll(thread1, thread2);
                 }
@@ -58,9 +59,10 @@ namespace Redistest
             }
         }
 
-        private static async Task RunRedisCommandsAsync(string prefix)
+        private static async Task RunRedisCommandsAsync(string prefix, int Timeout)
         {
             string MachineName2 = System.Net.Dns.GetHostName();
+            await Task.Delay(Timeout);
             // Simple PING command
             Console.WriteLine($"{Environment.NewLine}{prefix}: Cache command: PING");
             RedisResult pingResult = await _redisConnection.BasicRetryAsync(async (db) => await db.ExecuteAsync("PING"));
