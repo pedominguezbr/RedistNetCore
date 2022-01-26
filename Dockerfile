@@ -18,4 +18,6 @@ RUN dotnet publish "RedistNetCore.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN pwd
+RUN ls -lR .
 ENTRYPOINT ["dotnet", "RedistNetCore.dll"]
