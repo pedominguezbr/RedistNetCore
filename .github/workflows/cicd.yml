@@ -4,9 +4,9 @@ on:
       - 'main'
 
 jobs:
-  docker:
-    environment: DEV
+  docker:    
     runs-on: ubuntu-latest
+    environment: DEV
     steps:
       -
         name: Checkout
