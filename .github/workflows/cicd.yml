@@ -5,6 +5,7 @@ on:
 
 jobs:
   docker:
+    environment: DEV
     runs-on: ubuntu-latest
     steps:
       -
