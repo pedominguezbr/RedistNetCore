@@ -40,12 +40,14 @@ jobs:
     environment: DEV
     steps:
       - name: Checkout
-        uses: actions/checkout@v3      
+        uses: actions/checkout@v3
+
       - name: Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v1
         with:
           credentials_json: '${{ secrets.B64_GCLOUD_SERVICE_ACCOUNT_JSON }}'
+
       - name: Building and pushing the image gcr   
         uses: RafikFarhad/push-to-gcr-github-action@v5-beta # <- use this on your workflow
         with:
@@ -57,17 +59,7 @@ jobs:
           dockerfile: ./Dockerfile
           context: .
           target: build
-      # # Setup gcloud CLI
-      # - name: Set up Cloud SDK
-      #   uses: google-github-actions/setup-gcloud@v1
 
-      # Get the GKE credentials so we can deploy to the cluster
-      # - name: Get Credencials GKE
-      #   run: |-         
-      #     gcloud components install gke-gcloud-auth-plugin     
-      #     gcloud components list          
-      #     export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-      #     gcloud container clusters get-credentials "${{ secrets.GKE_CLUSTER }}" --zone "$GKE_ZONE"
       - name: Get Credencials GKE
         id: 'get-credentials'
         uses: 'google-github-actions/get-gke-credentials@v1'
@@ -86,10 +78,3 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
           APP_NAME: ${{ env.DEPLOYMENT_NAME }}
           COMMIT: ${{ github.sha }}
-
-      # # Deploy sample image to the GKE cluster
-      # - name: Deploy
-      #   run: |-
-      #     kubectl apply -f ./Deploy-k8s/02-redistnetcore.yml
-      #     kubectl rollout status deployment/$DEPLOYMENT_NAME
-      #     kubectl get services -o wide
