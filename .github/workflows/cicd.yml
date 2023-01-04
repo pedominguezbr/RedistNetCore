@@ -56,12 +56,13 @@ jobs:
           dockerfile: ./Dockerfile
           context: .
           target: build
-      # # Setup gcloud CLI
-      # - name: Set up Cloud SDK
-      #   uses: google-github-actions/setup-gcloud@v1
+      # Setup gcloud CLI
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
 
       # Get the GKE credentials so we can deploy to the cluster
-      - run: |-
+      - name: Get Credencials GKE
+        run: |-
           gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
       - name: update kubernetes yaml
         uses: swdotcom/update-and-apply-kubernetes-configs@v1
