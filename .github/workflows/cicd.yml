@@ -63,11 +63,9 @@ jobs:
 
       # Get the GKE credentials so we can deploy to the cluster
       - name: Get Credencials GKE
-        run: |-
-          gcloud components list
+        run: |-         
           gcloud components install gke-gcloud-auth-plugin     
-          gcloud components list
-          gcloud auth activate-service-account --key-file <(echo ${{ secrets.B64_GCLOUD_SERVICE_ACCOUNT_JSON }}  | base64 -d)
+          gcloud components list          
           export USE_GKE_GCLOUD_AUTH_PLUGIN=True
           gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
       
