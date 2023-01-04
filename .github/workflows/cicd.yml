@@ -79,6 +79,7 @@ jobs:
           PROJECT_ID: ${{ secrets.GKE_PROJECT }}
           IMAGE_TAG: ${{ github.sha }}
           APP_NAME: ${{ env.DEPLOYMENT_NAME }}
+          COMMIT: ${{ github.sha }}
 
       # # Deploy sample image to the GKE cluster
       # - name: Deploy

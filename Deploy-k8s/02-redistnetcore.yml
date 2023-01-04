@@ -58,6 +58,9 @@ spec:
           - mountPath: /app/appsettings.json
             name: redistnetcoremaps
             subPath: appsettings.json
+          env:
+            - name: "COMMIT"
+              value: ${COMMIT}
       restartPolicy: Always
   strategy:
     type: RollingUpdate
