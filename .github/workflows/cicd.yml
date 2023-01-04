@@ -62,12 +62,18 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
 
       # Get the GKE credentials so we can deploy to the cluster
+      # - name: Get Credencials GKE
+      #   run: |-         
+      #     gcloud components install gke-gcloud-auth-plugin     
+      #     gcloud components list          
+      #     export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+      #     gcloud container clusters get-credentials "${{ secrets.GKE_CLUSTER }}" --zone "$GKE_ZONE"
       - name: Get Credencials GKE
-        run: |-         
-          gcloud components install gke-gcloud-auth-plugin     
-          gcloud components list          
-          export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-          gcloud container clusters get-credentials "${{ secrets.GKE_CLUSTER }}" --zone "$GKE_ZONE"
+        id: 'get-credentials'
+        uses: 'google-github-actions/get-gke-credentials@v1'
+        with:
+          cluster_name: ${{ secrets.GKE_CLUSTER }}
+          location: ${{ env.GKE_ZONE }}
       
       - name: update kubernetes yaml
         uses: swdotcom/update-and-apply-kubernetes-configs@v1
