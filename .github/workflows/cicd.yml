@@ -37,6 +37,7 @@ jobs:
   build-and-push-to-gcr-gke-service-account:
     name: Build & push - with service account
     runs-on: ubuntu-latest
+    environment: DEV
     steps:
       - uses: actions/checkout@v3
       - name: Authenticate to Google Cloud
