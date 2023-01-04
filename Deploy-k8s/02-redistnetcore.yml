@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:  
   name: redistnetcoremaps
-  namespace: bancaempresas
+  namespace: deploygithub
 data:
   appsettings.json: |
     {
@@ -17,21 +17,21 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: redistnetcore
-  namespace: bancaempresas
+  name: ${APP_NAME}
+  namespace: deploygithub
   labels:
-    app: redistnetcore
+    app: ${APP_NAME}
     version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: redistnetcore
+      app: ${APP_NAME}
       version: v1
   template:
     metadata:
       labels:
-        app: redistnetcore
+        app: ${APP_NAME}
         version: v1
     spec:
       volumes:
@@ -42,7 +42,7 @@ spec:
           name: redistnetcoremaps
       containers:
         - name: redistnetcore
-          image: docker.io/pedominguezbr/redistnetcore:1.0   
+          image: gcr.io/${PROJECT_ID}/${APP_NAME}:${IMAGE_TAG}
           ports:
             - containerPort: 80
               protocol: TCP
