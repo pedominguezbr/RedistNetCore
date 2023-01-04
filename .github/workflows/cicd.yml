@@ -64,7 +64,8 @@ jobs:
       # Get the GKE credentials so we can deploy to the cluster
       - name: Get Credencials GKE
         run: |-
-          gke-gcloud-auth-plugin --version
+          export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+          gcloud auth activate-service-account --key-file <(echo ${{ secrets.B64_GCLOUD_SERVICE_ACCOUNT_JSON }}  | base64 -d)
           export USE_GKE_GCLOUD_AUTH_PLUGIN=True
           gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
       - name: update kubernetes yaml
