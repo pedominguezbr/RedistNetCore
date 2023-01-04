@@ -8,41 +8,42 @@ env:
   DEPLOYMENT_NAME: gke-hello-app # TODO: update deployment name if changed in deployment.yaml
   
 jobs:
-  docker:    
-    runs-on: ubuntu-latest
-    environment: DEV
-    steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v3
-      -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      -
-        name: Login to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      -
-        name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/redistnetcore:${{ github.sha }}
+  # docker:    
+  #   runs-on: ubuntu-latest
+  #   environment: DEV
+  #   steps:
+  #     -
+  #       name: Checkout
+  #       uses: actions/checkout@v3
+  #     -
+  #       name: Set up QEMU
+  #       uses: docker/setup-qemu-action@v2
+  #     -
+  #       name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v2
+  #     -
+  #       name: Login to DockerHub
+  #       uses: docker/login-action@v2
+  #       with:
+  #         username: ${{ secrets.DOCKER_USERNAME }}
+  #         password: ${{ secrets.DOCKER_PASSWORD }}
+  #     -
+  #       name: Build and push
+  #       uses: docker/build-push-action@v3
+  #       with:
+  #         context: .
+  #         push: true
+  #         tags: ${{ secrets.DOCKER_USERNAME }}/redistnetcore:${{ github.sha }}
   build-and-push-to-gcr-gke-service-account:
     name: Build & push - with service account
     runs-on: ubuntu-latest
     environment: DEV
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3      
       - name: Authenticate to Google Cloud
         id: auth
-        uses: google-github-actions/auth@v0
+        uses: google-github-actions/auth@v1
         with:
           credentials_json: '${{ secrets.B64_GCLOUD_SERVICE_ACCOUNT_JSON }}'
       - name: Building and pushing the image gcr   
