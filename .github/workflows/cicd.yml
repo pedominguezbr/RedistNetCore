@@ -67,7 +67,7 @@ jobs:
           gcloud components install gke-gcloud-auth-plugin     
           gcloud components list          
           export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-          gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+          gcloud container clusters get-credentials "${{ secrets.GKE_CLUSTER }}" --zone "$GKE_ZONE"
       
       - name: update kubernetes yaml
         uses: swdotcom/update-and-apply-kubernetes-configs@v1
