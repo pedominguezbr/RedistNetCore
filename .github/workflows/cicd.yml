@@ -2,8 +2,7 @@ on:
   push:
     branches:
       - 'main'
-env:
-  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+env: 
   GKE_CLUSTER: micasino-staging-gke    # TODO: update to cluster name
   GKE_ZONE: southamerica-west1-c	   # TODO: update to cluster zone
   DEPLOYMENT_NAME: gke-hello-app # TODO: update deployment name if changed in deployment.yaml
@@ -50,7 +49,7 @@ jobs:
         with:
           # gcloud_service_key: ${{ secrets.JSON_GCLOUD_SERVICE_ACCOUNT_JSON }} # <- not needed when used with google-github-actions/auth@v0
           registry: gcr.io
-          project_id: ${{ env.PROJECT_ID }}
+          project_id: ${{ secrets.GKE_PROJECT }}
           image_name: ${{ env.DEPLOYMENT_NAME }}
           image_tag: ${{ env.DEPLOYMENT_NAME }}-${{ github.sha }}, ${{ github.sha }}
           dockerfile: ./Dockerfile
@@ -70,7 +69,7 @@ jobs:
             Deploy-k8s/02-redistnetcore.yml            
           replacement-method: defined
         env:
-          PROJECT_ID: ${{ env.PROJECT_ID }}
+          PROJECT_ID: ${{ secrets.GKE_PROJECT }}
           IMAGE_TAG: ${{ github.sha }}
           APP_NAME: ${{ env.DEPLOYMENT_NAME }}
       # Deploy sample image to the GKE cluster
